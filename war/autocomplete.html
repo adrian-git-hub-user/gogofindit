@@ -1,0 +1,109 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+
+ <style type="text/css">
+        fieldset {width: 60%; margin: 0 auto;}
+        div.row {clear: both;}
+        div.row label {float: left; width: 60%;}
+        div.row span {float: right; width: 35%;}
+    </style>
+
+
+    <meta charset="utf-8" />
+    <title>jQuery UI Autocomplete - Custom data and display</title>
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css" />
+    <script src="http://code.jquery.com/jquery-1.8.2.js"></script>
+    <script src="http://code.jquery.com/ui/1.9.1/jquery-ui.js"></script>
+    <link rel="stylesheet" href="/resources/demos/style.css" />
+
+    <style>
+    #project-label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 1em;
+    }
+    #project-icon {
+        float: left;
+        height: 32px;
+        width: 32px;
+    }
+    #project-description {
+        margin: 0;
+        padding: 0;
+    }
+    </style>
+
+    <script>
+    $(function() {
+        
+        $( "#project" ).autocomplete({
+            minLength: 0,
+     		source: "/getsuggestions" ,
+            focus: function( event, ui ) {
+                $( "#project" ).val( ui.item.label );
+                return false;
+            },
+        })
+        .data( "autocomplete" )._renderItem = function( ul, item ) {
+            return $("#suggestionsDiv").append("<div class='row'> <label for='first-field'>"+item.value+"</label><span><input type=text id='first-field' size='15' /></span></div>");
+        };
+
+        
+        $("#eventFired").keyup(function() {
+        	
+        	$.ajax({
+        		  url: "/getsuggestions?term="+$("#eventFired").val(),
+        		  type: 'GET',
+        			success: function(resp) {
+  					console.log(resp);
+                  }
+        		})
+        	
+    		
+        });
+        
+        
+    });
+
+
+
+    
+    </script>
+</head>
+<body>
+
+<div id="project-label">Select a project (type "j" for a start):</div>
+<img id="project-icon" src="images/transparent_1x1.png" class="ui-state-default" alt="" />
+<input id="project" />
+<input type="hidden" id="project-id" />
+<p id="project-description"></p>
+
+
+
+  <fieldset>
+
+            <legend>Suggestions</legend>
+
+  <div id ="suggestionsDiv">
+            <div class="row">
+                <label for="first-field">The first field</label>
+                <span><input type="text" id="first-field" size="15" /></span>
+            </div>
+            <div class="row">
+                <label for="second-field">The second field with a longer label</label>
+                <span><input type="text" id="second-field" size="10" /></span>
+            </div>
+            <div class="row">
+                <label for="third-field">The third field</label>
+                <span><input type="text" id="third-field" size="5" /></span>
+            </div>
+   </div>
+  </fieldset>
+
+<input type="text" id="eventFired" size="15" /></span>
+
+</body>
+</html>
+​
